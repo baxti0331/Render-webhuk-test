@@ -34,10 +34,10 @@ def webhook():
 def send_welcome(message):
     markup = InlineKeyboardMarkup()
     # Ссылка на ваше веб-приложение
-    web_app_url = "https://qr-generation-psi.vercel.app/"  # Замените на свой URL
+    web_app_url = "https://ваше-сайт-приложение.com"  # Замените на свой URL
 
     web_app_button = InlineKeyboardButton(
-        text="PLAY🕹️",
+        text="Открыть веб-приложение",
         web_app=WebAppInfo(url=web_app_url)
     )
     markup.add(web_app_button)
@@ -59,4 +59,4 @@ if __name__ == '__main__':
         print("Вебхук успешно установлен.")
     else:
         print("Ошибка при установке вебхука.")
-    app.run(host='0.0.0.0', port=8080)
+    app.run(host='0.0.0.0', port=8080) убрать ты нажал кнопку и спасибо за нажатия 
