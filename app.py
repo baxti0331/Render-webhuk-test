@@ -1,7 +1,7 @@
 import os
 import telebot
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 from flask import Flask, request, abort
-from telebot import types
 
 API_TOKEN = os.getenv('API_TOKEN')
 if not API_TOKEN:
@@ -10,8 +10,9 @@ if not API_TOKEN:
 bot = telebot.TeleBot(API_TOKEN)
 app = Flask(__name__)
 
+# Убираем двоеточие из токена в URL пути
 clean_token = API_TOKEN.replace(':', '')
-WEBHOOK_URL_BASE = 'https://render-webhuk-test.onrender.com'  # Заменить на свой домен
+WEBHOOK_URL_BASE = 'https://render-webhuk-test.onrender.com'
 WEBHOOK_URL_PATH = f"/{clean_token}/"
 
 @app.route('/')
@@ -28,13 +29,22 @@ def webhook():
     else:
         abort(403)
 
+# Обработчик команды /start
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
-    markup = types.InlineKeyboardMarkup()
-    button = types.InlineKeyboardButton(text="PLAY🕹️", callback_data="button_click")
-    markup.add(button)
-    bot.send_message(message.chat.id, "Привет! Я бот на вебхуках!", reply_markup=markup)
+    markup = InlineKeyboardMarkup()
+    # Ссылка на ваше веб-приложение
+    web_app_url = "https://ваше-сайт-приложение.com"  # Замените на свой URL
 
+    web_app_button = InlineKeyboardButton(
+        text="Открыть веб-приложение",
+        web_app=WebAppInfo(url=web_app_url)
+    )
+    markup.add(web_app_button)
+
+    bot.send_message(message.chat.id, "Привет! Я бот на вебхуках! Вот кнопка для открытия веб-приложения:", reply_markup=markup)
+
+# Обработчик нажатия других кнопок
 @bot.callback_query_handler(func=lambda call: call.data == "button_click")
 def callback_button(call):
     bot.answer_callback_query(call.id, "Ты нажал кнопку!")
