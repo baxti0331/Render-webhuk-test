@@ -1,6 +1,7 @@
 import os
 import telebot
 from flask import Flask, request, abort
+from telebot import types
 
 API_TOKEN = os.getenv('API_TOKEN')
 if not API_TOKEN:
@@ -9,9 +10,8 @@ if not API_TOKEN:
 bot = telebot.TeleBot(API_TOKEN)
 app = Flask(__name__)
 
-# Убираем двоеточие из токена в URL пути
 clean_token = API_TOKEN.replace(':', '')
-WEBHOOK_URL_BASE = 'https://render-webhuk-test.onrender.com'
+WEBHOOK_URL_BASE = 'https://render-webhuk-test.onrender.com'  # Заменить на свой домен
 WEBHOOK_URL_PATH = f"/{clean_token}/"
 
 @app.route('/')
@@ -27,9 +27,14 @@ def webhook():
         return '', 200
     else:
         abort(403)
-bot.message_handler(commands=['start'])
+
+@bot.message_handler(commands=['start'])
 def send_welcome(message):
-    bot.send_message(message.chat.id, "Привет! Я бот на вебхуках!")
+    markup = types.InlineKeyboardMarkup()
+    button = types.InlineKeyboardButton(text="PLAY🕹️", callback_data="button_click")
+    markup.add(button)
+    bot.send_message(message.chat.id, "Привет! Я бот на вебхуках!", reply_markup=markup)
+
 @bot.callback_query_handler(func=lambda call: call.data == "button_click")
 def callback_button(call):
     bot.answer_callback_query(call.id, "Ты нажал кнопку!")
