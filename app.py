@@ -9,8 +9,10 @@ if not API_TOKEN:
 bot = telebot.TeleBot(API_TOKEN)
 app = Flask(__name__)
 
-WEBHOOK_URL_BASE = 'https://your-render-domain.onrender.com'  # <-- замените на ваш URL
-WEBHOOK_URL_PATH = f"/{API_TOKEN}/"
+# Убираем двоеточие из токена в URL пути
+clean_token = API_TOKEN.replace(':', '')
+WEBHOOK_URL_BASE = 'https://render-webhuk-test.onrender.com'
+WEBHOOK_URL_PATH = f"/{clean_token}/"
 
 @app.route('/')
 def index():
@@ -24,15 +26,16 @@ def webhook():
         bot.process_new_updates([update])
         return '', 200
     else:
-        abort(403)  # Запретить запросы с другим content-type
+        abort(403)
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
-    bot.send_message(message.chat.id, "Привет! Я простой бот с вебхуком на Flask.")
+    bot.send_message(message.chat.id, "Привет! Я бот на вебхуках!")
 
 if __name__ == '__main__':
-    print("Устанавливаю вебхук...")
+    print("Удаляю старый вебхук...")
     bot.remove_webhook()
+    print("Устанавливаю новый вебхук...")
     success = bot.set_webhook(url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH)
     if success:
         print("Вебхук успешно установлен.")
