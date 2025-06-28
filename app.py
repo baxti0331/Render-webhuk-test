@@ -34,7 +34,7 @@ def webhook():
 def send_welcome(message):
     markup = InlineKeyboardMarkup()
     # Ссылка на ваше веб-приложение
-    web_app_url = " "  # Замените на свой URL
+    web_app_url = "https://qr-generation-psi.vercel.app/"  # Замените на свой URL
 
     web_app_button = InlineKeyboardButton(
         text="PLAY🕹️",
