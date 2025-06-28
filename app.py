@@ -28,9 +28,19 @@ def webhook():
     else:
         abort(403)
 
+from telebot import types
+
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
-    bot.send_message(message.chat.id, "Привет! Я бот на вебхуках!")
+    markup = types.InlineKeyboardMarkup()
+    button = types.InlineKeyboardButton(text="Нажми меня", callback_data="button_click")
+    markup.add(button)
+    bot.send_message(message.chat.id, "Привет! Я бот на вебхуках!", reply_markup=markup)
+
+@bot.callback_query_handler(func=lambda call: call.data == "button_click")
+def callback_button(call):
+    bot.answer_callback_query(call.id, "Ты нажал кнопку!")
+    bot.send_message(call.message.chat.id, "Спасибо за нажатие!")
 
 if __name__ == '__main__':
     print("Удаляю старый вебхук...")
