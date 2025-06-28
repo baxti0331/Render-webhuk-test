@@ -34,10 +34,10 @@ def webhook():
 def send_welcome(message):
     markup = InlineKeyboardMarkup()
     # Ссылка на ваше веб-приложение
-    web_app_url = "https://ваше-сайт-приложение.com"  # Замените на свой URL
+    web_app_url = "https://cats-two-ivory.vercel.app/"  # Замените на свой URL
 
     web_app_button = InlineKeyboardButton(
-        text="Открыть веб-приложение",
+        text="PLAY🕹️",
         web_app=WebAppInfo(url=web_app_url)
     )
     markup.add(web_app_button)
