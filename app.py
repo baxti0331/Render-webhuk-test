@@ -10,12 +10,11 @@ if not API_TOKEN:
 bot = telebot.TeleBot(API_TOKEN)
 app = Flask(__name__)
 
-# Убираем двоеточие из токена в URL пути
 clean_token = API_TOKEN.replace(':', '')
-WEBHOOK_URL_BASE = 'https://render-webhuk-test.onrender.com'
+WEBHOOK_URL_BASE = 'https://render-webhuk-test.onrender.com'  # ОБЯЗАТЕЛЬНО проверьте!
 WEBHOOK_URL_PATH = f"/{clean_token}/"
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index():
     return "Бот запущен и готов к работе!"
 
@@ -29,12 +28,10 @@ def webhook():
     else:
         abort(403)
 
-# Обработчик команды /start
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
     markup = InlineKeyboardMarkup()
-    # Ссылка на ваше веб-приложение
-    web_app_url = "https://cats-two-ivory.vercel.app/"  # Замените на свой URL
+    web_app_url = "https://cats-two-ivory.vercel.app/"
 
     web_app_button = InlineKeyboardButton(
         text="PLAY🕹️",
@@ -42,9 +39,8 @@ def send_welcome(message):
     )
     markup.add(web_app_button)
 
-    bot.send_message(message.chat.id, "Привет!:", reply_markup=markup)
+    bot.send_message(message.chat.id, "Привет! Вот кнопка для открытия игры:", reply_markup=markup)
 
-# Обработчик нажатия других кнопок
 @bot.callback_query_handler(func=lambda call: call.data == "button_click")
 def callback_button(call):
     bot.answer_callback_query(call.id, "Ты нажал кнопку!")
@@ -56,7 +52,9 @@ if __name__ == '__main__':
     print("Устанавливаю новый вебхук...")
     success = bot.set_webhook(url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH)
     if success:
-        print("Вебхук успешно установлен.")
+        print(f"Вебхук успешно установлен: {WEBHOOK_URL_BASE + WEBHOOK_URL_PATH}")
     else:
         print("Ошибка при установке вебхука.")
-    app.run(host='0.0.0.0', port=8080)
+    
+    port = int(os.environ.get('PORT', 8080))
+    app.run(host='0.0.0.0', port=port)
