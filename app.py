@@ -39,8 +39,7 @@ def send_welcome(message):
     )
     markup.add(web_app_button)
 
-    bot.send_message(message.chat.id, "Игра «Котики 🐱 vs Собачки 🐶» с ИИ — вызов для каждого!
-А ты сможешь Выйграть Искусственный Интеллект😎:", reply_markup=markup)
+    bot.send_message(message.chat.id, "Игра «Котики 🐱 vs Собачки 🐶» с ИИ — вызов для каждого!А ты сможешь Выйграть Искусственный Интеллект😎:", reply_markup=markup)
 
 @bot.callback_query_handler(func=lambda call: call.data == "button_click")
 def callback_button(call):
